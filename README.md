@@ -33,6 +33,34 @@ Add this dependency to your `pom.xml`:
 </dependency>
 ```
 
+## Use In Gradle Project
+
+Add this repository and dependency to your `build.gradle`:
+
+```groovy
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/Robotig6282/bore4j")
+    }
+}
+
+dependencies {
+    implementation "xyz.robotig:bore4j:1.0-SNAPSHOT"
+}
+```
+
+Or in `build.gradle.kts`:
+
+```kotlin
+repositories {
+    maven("https://maven.pkg.github.com/Robotig6282/bore4j")
+}
+
+dependencies {
+    implementation("xyz.robotig:bore4j:1.0-SNAPSHOT")
+}
+```
+
 ## Quick Start
 
 ```java
