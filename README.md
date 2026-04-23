@@ -21,6 +21,18 @@ mvn compile
 mvn test
 ```
 
+## Use In Maven Project
+
+Add this dependency to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>xyz.robotig</groupId>
+  <artifactId>bore4j</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
 ## Quick Start
 
 ```java
