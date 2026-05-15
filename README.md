@@ -1,5 +1,12 @@
-# bore4j
 
+<div align="center">
+  <h1>
+    bore4j
+  </h1>
+  <img src="https://share.robotig.xyz/M2Vg5/BSDXYw.png/raw" alt="logo" width="230" height="130">
+</div>
+
+---
 Java client library for the [bore](https://github.com/ekzhang/bore) TCP tunneling protocol.
 
 This project implements bore client-side control protocol in Java 21:
