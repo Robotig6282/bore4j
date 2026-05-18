@@ -118,12 +118,35 @@ public final class BoreClient implements AutoCloseable {
                 try {
                     handleConnection(id);
                 } catch (IOException exception) {
-                    LOG.log(Level.WARNING, "connection exited with error for id " + id, exception);
+                    logConnectionTaskFailure(id, exception);
                 }
             });
         } catch (RejectedExecutionException ignored) {
             // client is closing
         }
+    }
+
+    private void logConnectionTaskFailure(UUID id, IOException exception) {
+        if (isExpectedConnectionClose(exception)) {
+            LOG.log(Level.FINE, "connection closed for id " + id, exception);
+            return;
+        }
+        LOG.log(Level.WARNING, "connection exited with error for id " + id, exception);
+    }
+
+    private boolean isExpectedConnectionClose(IOException exception) {
+        if (!closed.get()) {
+            return false;
+        }
+        if (isInterruptedCopy(exception)) {
+            return true;
+        }
+        return isExpectedClose(exception);
+    }
+
+    private static boolean isInterruptedCopy(IOException exception) {
+        return "copy interrupted".equals(exception.getMessage())
+                && exception.getCause() instanceof InterruptedException;
     }
 
     private void handleConnection(UUID id) throws IOException {
