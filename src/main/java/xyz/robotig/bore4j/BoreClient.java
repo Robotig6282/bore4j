@@ -149,6 +149,21 @@ public final class BoreClient implements AutoCloseable {
                 && exception.getCause() instanceof InterruptedException;
     }
 
+    static String serverErrorMessage(String serverMessage, int requestedRemotePort) {
+        if (requestedRemotePort > 0 && isPortAlreadyInUseError(serverMessage)) {
+            return "server error: port already in use (requested remote port " + requestedRemotePort
+                    + "). Choose another remote port or use 0 for automatic assignment.";
+        }
+        return "server error: " + serverMessage;
+    }
+
+    private static boolean isPortAlreadyInUseError(String message) {
+        if (message == null) {
+            return false;
+        }
+        return message.toLowerCase().contains("port already in use");
+    }
+
     private void handleConnection(UUID id) throws IOException {
         try (DelimitedConnection remoteConnection =
                      DelimitedConnection.connect(serverHost, BoreProtocol.CONTROL_PORT, NETWORK_TIMEOUT)) {
@@ -307,7 +322,7 @@ public final class BoreClient implements AutoCloseable {
                     return new BoreClient(connection, serverHost, localHost, localPort, hello.port(), authenticator);
                 }
                 if (message instanceof BoreProtocol.Error error) {
-                    throw new IOException("server error: " + error.message());
+                    throw new IOException(serverErrorMessage(error.message(), remotePort));
                 }
                 if (message instanceof BoreProtocol.Challenge) {
                     throw new IOException("server requires authentication, but no client secret was provided");
